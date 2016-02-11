@@ -10,17 +10,25 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity
-        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
-{
+        implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
+    private LocationRequest mLocationRequest;
 
     private TextView mLatitude;
     private TextView mLongitude;
+    private TextView mLastUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +37,7 @@ public class MainActivity extends AppCompatActivity
 
         mLatitude = (TextView) findViewById( R.id.latitude );
         mLongitude = (TextView) findViewById( R.id.longitude );
+        mLastUpdate = (TextView) findViewById( R.id.updatetime );
 
         if( mGoogleApiClient == null ) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -41,18 +50,20 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnected(Bundle bundle) {
-        //int fineLoc = checkSelfPermission( Manifest.permission.ACCESS_FINE_LOCATION );
-        //int coarseLoc = checkSelfPermission( Manifest.permission.ACCESS_COARSE_LOCATION );
-
-        //if(( fineLoc != PackageManager.PERMISSION_GRANTED ) && ( coarseLoc != PackageManager.PERMISSION_GRANTED )) {
-        //    return;
-        //}
-
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation( mGoogleApiClient);
 
-        if( mLastLocation != null ) {
-            mLatitude.setText( String.valueOf(mLastLocation.getLatitude()));
-            mLongitude.setText( String.valueOf( mLastLocation.getLongitude()));
+        if( mLastLocation == null ) {
+            return;
+        }
+
+        mLatitude.setText(String.valueOf(mLastLocation.getLatitude()));
+        mLongitude.setText( String.valueOf(mLastLocation.getLongitude()));
+        String dat = DateFormat.getTimeInstance().format(new Date()).toString();
+        mLastUpdate.setText( dat );
+
+        createLocationRequest();
+        if( mLocationRequest != null){
+            startLocationUpdates();
         }
     }
 
@@ -77,4 +88,26 @@ public class MainActivity extends AppCompatActivity
         mGoogleApiClient.disconnect();
         super.onStop();
     }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, (LocationListener) this);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+
+        mLatitude.setText(String.valueOf(mLastLocation.getLatitude()));
+        mLongitude.setText( String.valueOf(mLastLocation.getLongitude()));
+        String dat = DateFormat.getTimeInstance().format(new Date()).toString();
+        mLastUpdate.setText( dat );
+    }
+
 }
