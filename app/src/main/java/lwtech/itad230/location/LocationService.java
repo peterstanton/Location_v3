@@ -29,7 +29,7 @@ public class LocationService extends Service implements
     private Location mLastLocation;
     private LocationRequest mLocationRequest;
     static protected ArrayList<String> locations = new ArrayList<String>();
-
+    
     // leave alone for now
     public LocationService() {
 
