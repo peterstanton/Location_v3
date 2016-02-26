@@ -21,8 +21,8 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
+    private GoogleApiClient mGoogleApiClient;  //implements the stuff we need for the location service like the API client
+    private Location mLastLocation;            //and location variables.
     private LocationRequest mLocationRequest;
 
     private TextView mLatitude;
@@ -69,12 +69,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    public void startButtonClick(View view) {
+    public void startButtonClick(View view) {  //starts service
         Intent intent = new Intent(this, LocationService.class);
         startService(intent);
     }
 
-    public void stopButtonClick(View view) {
+    public void stopButtonClick(View view) {  //stops service
         Intent intent = new Intent(this, LocationService.class);
         stopService(intent);
     }
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             //tv.setText(s);
             str += (s + "\n");
         }
-        TextView tv = (TextView) findViewById(R.id.locations);
+        TextView tv = (TextView) findViewById(R.id.locations);  //pulls the location data from our service's listarray and displays it.
         tv.setText(str);
     }
 }

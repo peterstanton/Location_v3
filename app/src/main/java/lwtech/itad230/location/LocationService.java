@@ -25,11 +25,11 @@ public class LocationService extends Service implements
         LocationListener
 {
 
-    private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
-    private LocationRequest mLocationRequest;
-    static protected ArrayList<String> locations = new ArrayList<String>();
-    
+    private GoogleApiClient mGoogleApiClient;  //our google play services API
+    private Location mLastLocation;   //the location
+    private LocationRequest mLocationRequest;  //grabs locations
+    static protected ArrayList<String> locations = new ArrayList<String>();   //stores the location data in this structure.
+
     // leave alone for now
     public LocationService() {
 
@@ -39,26 +39,26 @@ public class LocationService extends Service implements
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         //throw new UnsupportedOperationException("Not yet implemented");
-        return null;
+        return null;  //we don't do binding
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if( mGoogleApiClient == null ) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
+            mGoogleApiClient = new GoogleApiClient.Builder(this)  //starts up an instance of the API client
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
+                    .addApi(LocationServices.API)  //adds location service API
                     .build();
         }
 
-        mGoogleApiClient.connect();
-        return super.onStartCommand(intent,flags,startId);
+        mGoogleApiClient.connect();  //connect to the API client
+        return super.onStartCommand(intent,flags,startId);  //equivalent to return START.STICKY, if we get killed, will return and restart
     }
 
     @Override
-    public void onConnected(Bundle bundle) {
-        int permissionCheck;
+    public void onConnected(Bundle bundle) {  //upon connecting to the API client
+        int permissionCheck;  //checks that we have the permissions for location services in the android manifest.
         permissionCheck = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
 
@@ -66,17 +66,17 @@ public class LocationService extends Service implements
             return;
         }
 
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient); //gets location from the API client
         if( mLastLocation == null ) {
             return;
         }
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(4000);
+        mLocationRequest.setInterval(4000);  //sets a pause between location updates
         mLocationRequest.setFastestInterval(2000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);  //gives us accuracy.
 
-        if( mLocationRequest != null){
+        if( mLocationRequest != null){  //if our location is null, retries.
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
                     mLocationRequest, (LocationListener) this);
         }
@@ -89,11 +89,11 @@ public class LocationService extends Service implements
 
     @Override
     public void onLocationChanged(Location location) {
-        mLastLocation = location;
-        String dat = DateFormat.getDateTimeInstance().format(new Date());
+        mLastLocation = location;  //updates the current location to the new location
+        String dat = DateFormat.getDateTimeInstance().format(new Date());  //these lines grab date, longitude and latitude into strings
         String lat = String.valueOf(location.getLatitude());
         String lon = String.valueOf(location.getLongitude());
-        locations.add(dat);
+        locations.add(dat);  //stores the strings with that information in our listarray structure.
         locations.add(lon);
         locations.add(lat);
     }
@@ -106,5 +106,5 @@ public class LocationService extends Service implements
     @Override
     public void onDestroy() {
         mGoogleApiClient.disconnect();
-    }
+    }  //kills the API client whene the service is being destroyed.
 }
