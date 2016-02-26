@@ -5,7 +5,7 @@
     <!-- package="com.google.android.gms.loction.sample.locationupdates" > -->
     <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />  <!-- grants permission to use accurate location -->
 
     <application
         android:allowBackup="true"
