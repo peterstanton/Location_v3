@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.ContextCompat;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -29,6 +30,10 @@ public class LocationService extends Service implements
     private Location mLastLocation;   //the location
     private LocationRequest mLocationRequest;  //grabs locations
     static protected ArrayList<String> locations = new ArrayList<String>();   //stores the location data in this structure.
+
+    public TextView longitude;
+    public TextView latitude;
+    public TextView time;
 
     // leave alone for now
     public LocationService() {
@@ -96,6 +101,12 @@ public class LocationService extends Service implements
         locations.add(dat);  //stores the strings with that information in our listarray structure.
         locations.add(lon);
         locations.add(lat);
+
+
+        latitude.setText(String.valueOf(mLastLocation.getLatitude()));
+        longitude.setText(String.valueOf(mLastLocation.getLongitude()));
+        String date = DateFormat.getTimeInstance().format(new Date()).toString();
+        time.setText(dat);
     }
 
     @Override

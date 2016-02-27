@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView mLongitude;
     private TextView mLastUpdate;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
