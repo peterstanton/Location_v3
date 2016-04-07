@@ -25,11 +25,6 @@ public class MainActivity extends AppCompatActivity {
     private Location mLastLocation;            //and location variables.
     private LocationRequest mLocationRequest;
 
-    private TextView mLatitude;
-    private TextView mLongitude;
-    private TextView mLastUpdate;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

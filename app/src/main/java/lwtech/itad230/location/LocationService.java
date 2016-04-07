@@ -106,7 +106,8 @@ public class LocationService extends Service implements
         latitude.setText(String.valueOf(mLastLocation.getLatitude()));
         longitude.setText(String.valueOf(mLastLocation.getLongitude()));
         String date = DateFormat.getTimeInstance().format(new Date()).toString();
-        time.setText(dat);
+        time.setText(date);
+
     }
 
     @Override
